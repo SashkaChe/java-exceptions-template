@@ -1,5 +1,7 @@
 package com.epam.izh.rd.online.service;
 
+import com.epam.izh.rd.online.exception.UserNotFoundException;
+import com.epam.izh.rd.online.exception.NotCorrectPasswordException;
 import com.epam.izh.rd.online.entity.User;
 import com.epam.izh.rd.online.repository.IUserRepository;
 
@@ -24,14 +26,6 @@ public class AuthenticationService implements IAuthenticationService {
      *
      * @param user - пользователь проходящий авторизацию
      */
-
-    // (^_^)
-    class UserNotFoundException extends Throwable {
-    }
-
-    // (^_^)
-    class NotCorrectPasswordException extends Throwable {
-    }
 
     @Override
     public User login(User user) {

@@ -41,8 +41,7 @@ public class UserService implements IUserService {
     @Override
     public User register(User user) {
 
-
-        // проверяем заполняемость полей
+         // проверяем заполняемость полей
         try {
             if (user.getPassword().trim().length() == 0 || user.getLogin().trim().length() == 0) {
                 throw new IllegalArgumentException();
@@ -67,11 +66,13 @@ public class UserService implements IUserService {
 
         // проверяем сложность пароля
 try {
-    Integer.parseInt(user.getPassword());
+  Integer.parseInt(user.getPassword());
+
 }
 catch (SimplePasswordException e) {
     System.out.println("Пароль не соответствует требованиям безопасности");
 }
+
 
         // Если все проверки успешно пройдены, сохраняем пользователя в базу
         return userRepository.save(user);
