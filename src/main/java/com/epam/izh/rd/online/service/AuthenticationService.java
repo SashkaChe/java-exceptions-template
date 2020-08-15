@@ -26,15 +26,11 @@ public class AuthenticationService implements IAuthenticationService {
      */
 
     // (^_^)
-    private class UserNotFoundException extends Throwable {
-        public UserNotFoundException(String s) {
-        }
+    class UserNotFoundException extends Throwable {
     }
 
     // (^_^)
-    private class NotCorrectPasswordException extends Throwable {
-        public NotCorrectPasswordException(String s) {
-        }
+    class NotCorrectPasswordException extends Throwable {
     }
 
     @Override
@@ -47,19 +43,19 @@ public class AuthenticationService implements IAuthenticationService {
 
         try {
     if (foundUser == null) {
-        throw new UserNotFoundException("Пользователь с таким логином не найден");
+        throw new UserNotFoundException();
     }
 
             if (foundPass == null) {
-                throw new NotCorrectPasswordException("Пароль введен неверно!");
+                throw new NotCorrectPasswordException();
             }
 
         }
 catch (UserNotFoundException e) {
-    System.out.println(e);
+    System.out.println("Пользователь с таким логином не найден");
 }
         catch (NotCorrectPasswordException e) {
-            System.out.println(e);
+            System.out.println("Пароль введен неверно!");
         }
 
         // Устанавливаем найденного пользователя, который прошел все проверки, как вошедшего в систему.
