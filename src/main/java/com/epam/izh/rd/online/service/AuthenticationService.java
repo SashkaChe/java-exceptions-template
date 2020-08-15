@@ -28,33 +28,21 @@ public class AuthenticationService implements IAuthenticationService {
      */
 
     @Override
-    public User login(User user) {
-        // Находим пользователя в базе
-        // Сравниваем пароли (^_^)
-
-        User foundUser = userRepository.findByLogin(user.getLogin());
-        User foundPass = userRepository.findByPassword(user.getPassword()); // (^_^)
+    public User login(User user) throws Exception {
 
         try {
-    if (foundUser == null) {
-        throw new UserNotFoundException();
-    }
+            User foundUser = userRepository.findByLogin(user.getLogin());
+            User foundPass = userRepository.findByPassword(user.getPassword());
 
-            if (foundPass == null) {
-                throw new NotCorrectPasswordException();
-            }
-
-        }
-catch (UserNotFoundException e) {
-    System.out.println("Пользователь с таким логином не найден");
-}
-        catch (NotCorrectPasswordException e) {
-            System.out.println("Пароль введен неверно!");
-        }
 
         // Устанавливаем найденного пользователя, который прошел все проверки, как вошедшего в систему.
         CurrentUserManager.setCurrentLoggedInUser(foundUser);
         return foundUser;
+
+        }
+        catch (UserNotFoundException e) {
+
+        }
     }
 
     /**
