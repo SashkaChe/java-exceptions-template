@@ -57,6 +57,15 @@ public class UserRepository implements IUserRepository {
                 .findFirst().orElse(null);
     }
 
+    @Override // Поиск в БД пароля (^_^)
+    public User findByPassword(String password) {
+        Objects.requireNonNull(password, "Отсутствует пароль для поиска пользователя");
+
+        return userDatabase.stream()
+                .filter(user -> user.getPassword().equals(password))
+                .findFirst().orElse(null);
+    }
+
     /**
      * Метод удаления пользователя с определенным логином.
      * <p>

@@ -8,5 +8,7 @@ public interface IUserRepository {
 
     User findByLogin(String login);
 
+    User findByPassword(String password); // (^_^)
+
     void deleteByLogin(String login);
 }

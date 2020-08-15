@@ -24,18 +24,46 @@ public class AuthenticationService implements IAuthenticationService {
      *
      * @param user - пользователь проходящий авторизацию
      */
+
+    // (^_^)
+    private class UserNotFoundException extends Throwable {
+        public UserNotFoundException(String s) {
+        }
+    }
+
+    // (^_^)
+    private class NotCorrectPasswordException extends Throwable {
+        public NotCorrectPasswordException(String s) {
+        }
+    }
+
     @Override
     public User login(User user) {
         // Находим пользователя в базе
-        User foundUser = userRepository.findByLogin(user.getLogin());
+        // Сравниваем пароли (^_^)
 
-        //
-        // Здесь необходимо реализовать перечисленные выше проверки
-        //
+        User foundUser = userRepository.findByLogin(user.getLogin());
+        User foundPass = userRepository.findByPassword(user.getPassword()); // (^_^)
+
+        try {
+    if (foundUser == null) {
+        throw new UserNotFoundException("Пользователь с таким логином не найден");
+    }
+
+            if (foundPass == null) {
+                throw new NotCorrectPasswordException("Пароль введен неверно!");
+            }
+
+        }
+catch (UserNotFoundException e) {
+    System.out.println(e);
+}
+        catch (NotCorrectPasswordException e) {
+            System.out.println(e);
+        }
 
         // Устанавливаем найденного пользователя, который прошел все проверки, как вошедшего в систему.
         CurrentUserManager.setCurrentLoggedInUser(foundUser);
-
         return foundUser;
     }
 
@@ -46,4 +74,6 @@ public class AuthenticationService implements IAuthenticationService {
     public void logout() {
         CurrentUserManager.setCurrentLoggedInUser(null);
     }
+
+
 }
