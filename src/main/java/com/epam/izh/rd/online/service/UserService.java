@@ -29,12 +29,49 @@ public class UserService implements IUserService {
      *
      * @param user - даныне регистрирующегося пользователя
      */
+
+    // (^_^)
+    class UserAlreadyRegisteredException extends Throwable {
+    }
+
+    // (^_^)
+    class SimplePasswordException extends NumberFormatException {
+    }
+
     @Override
     public User register(User user) {
 
-        //
-        // Здесь необходимо реализовать перечисленные выше проверки
-        //
+
+        // проверяем заполняемость полей
+        try {
+            if (user.getPassword().trim().length() == 0 || user.getLogin().trim().length() == 0) {
+                throw new IllegalArgumentException();
+            }
+        }
+        catch (IllegalArgumentException e) {
+            System.out.println("Ошибка в заполнении полей");
+        }
+
+        // проверяем есть ли в базе юзер с таким же логином
+        User foundUser = userRepository.findByLogin(user.getLogin());
+
+        try {
+            if (foundUser != null) {
+                throw new UserAlreadyRegisteredException();
+            }
+
+        }
+        catch (UserAlreadyRegisteredException e) {
+            System.out.println("Пользователь с логином " + user.getLogin() + " уже зарегистрирован");
+        }
+
+        // проверяем сложность пароля
+try {
+    Integer.parseInt(user.getPassword());
+}
+catch (SimplePasswordException e) {
+    System.out.println("Пароль не соответствует требованиям безопасности");
+}
 
         // Если все проверки успешно пройдены, сохраняем пользователя в базу
         return userRepository.save(user);
