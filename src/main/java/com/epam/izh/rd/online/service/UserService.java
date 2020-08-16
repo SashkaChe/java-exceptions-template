@@ -89,7 +89,13 @@ try {
 
     userRepository.deleteByLogin(login);
 }
-catch(NotAccessException e) {
+catch(UnsupportedOperationException e) {
+
+    try { throw new NotAccessException();}
+
+    catch(NotAccessException b){
+
+    }
 
 }
         // Здесь необходимо сделать доработку метода
