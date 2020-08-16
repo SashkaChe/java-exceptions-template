@@ -82,7 +82,7 @@ public class UserService implements IUserService {
      *
      * @param login
      */
-    public void delete(String login) {
+    public void delete(String login) throws Exception {
 
         // Здесь необходимо сделать доработку метод
 try {
@@ -90,13 +90,9 @@ try {
     userRepository.deleteByLogin(login);
 }
 catch(UnsupportedOperationException e) {
-
-    try { throw new NotAccessException();}
-
-    catch(NotAccessException b){
-
-    }
-
+    throw new NotAccessException();
+//    throw e;
+//    throw new NotAccessException(e);
 }
         // Здесь необходимо сделать доработку метода
 

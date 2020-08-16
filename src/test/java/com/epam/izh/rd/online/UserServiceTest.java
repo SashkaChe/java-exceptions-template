@@ -1,6 +1,7 @@
 package com.epam.izh.rd.online;
 
 import com.epam.izh.rd.online.entity.User;
+import com.epam.izh.rd.online.exception.NotAccessException;
 import com.epam.izh.rd.online.repository.IUserRepository;
 import com.epam.izh.rd.online.repository.UserRepository;
 import com.epam.izh.rd.online.service.CurrentUserManager;
@@ -13,7 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import static com.epam.izh.rd.online.Providers.getUserWithNumberPassword;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UserServiceTest {
 
@@ -62,7 +63,31 @@ public class UserServiceTest {
     @DisplayName("Тест метода IUserService.delete(String login)")
     void testDelete(User user) {
         CurrentUserManager.setCurrentLoggedInUser(user);
+        try {
+            userService.delete("123");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         assertion.assertThrowsWithClassName("NotAccessException", () -> userService.delete("123"),
                 "Недостаточно прав для выполнения операции");
+    }
+
+    @ParameterizedTest
+    @MethodSource("com.epam.izh.rd.online.Providers#testDelete")
+    @DisplayName("Тест метода IUserService.delete(String login)")
+    void testDeleteUpgraded(User user) {
+        CurrentUserManager.setCurrentLoggedInUser(user);
+        Exception actualCause = null;
+        try {
+            userService.delete("123");
+        } catch (Exception e) {
+            System.out.println("**** Поймано исключение:");
+            e.printStackTrace();
+            System.out.println("**** Конец исключения. Проверяем..");
+            actualCause = e;
+        }
+        assertEquals(actualCause.getMessage(), "Недостаточно прав для выполнения операции");
+        assertTrue(actualCause instanceof NotAccessException);
+        assertTrue(actualCause.getCause() != null);
     }
 }
