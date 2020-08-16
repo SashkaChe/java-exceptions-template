@@ -30,14 +30,13 @@ public class AuthenticationService implements IAuthenticationService {
     @Override
     public User login(User user) throws Exception {
 
-            User foundUser = userRepository.findByLogin(user.getLogin());
-            User foundPass = userRepository.findByPassword(user.getPassword());
-
-            if (foundUser == null) {
+            if (userRepository.findByLogin(user.getLogin()) == null) {
                 throw new UserNotFoundException();
             }
 
-             if (foundPass == null || !foundUser.getPassword().equals(foundPass.getPassword())) {
+                User foundUser = userRepository.findByLogin(user.getLogin());
+
+             if (userRepository.findByPassword(user.getPassword()) == null || !foundUser.getPassword().equals(userRepository.findByPassword(user.getPassword()).getPassword())) {
                  throw new NotCorrectPasswordException();
              }
 

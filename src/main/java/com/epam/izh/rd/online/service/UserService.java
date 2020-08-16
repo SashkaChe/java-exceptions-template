@@ -85,19 +85,15 @@ public class UserService implements IUserService {
     public void delete(String login) {
 
         // Здесь необходимо сделать доработку метод
-try {
+    try {
 
-    userRepository.deleteByLogin(login);
-}
-catch(UnsupportedOperationException e) {
+        userRepository.deleteByLogin(login);
+        }
+        catch(UnsupportedOperationException e) {
 
-    try { throw new NotAccessException();}
+        throw new NotAccessException();
 
-    catch(NotAccessException b){
-
-    }
-
-}
+        }
         // Здесь необходимо сделать доработку метода
 
     }
