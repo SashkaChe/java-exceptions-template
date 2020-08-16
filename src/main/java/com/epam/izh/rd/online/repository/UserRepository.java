@@ -57,7 +57,7 @@ public class UserRepository implements IUserRepository {
                 .findFirst().orElse(null);
     }
 
-    @Override // Поиск в БД пароля (^_^)
+    @Override
     public User findByPassword(String password) {
         Objects.requireNonNull(password, "Отсутствует пароль для поиска пользователя");
 

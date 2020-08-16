@@ -30,7 +30,6 @@ public class AuthenticationService implements IAuthenticationService {
     @Override
     public User login(User user) throws Exception {
 
-
             User foundUser = userRepository.findByLogin(user.getLogin());
             User foundPass = userRepository.findByPassword(user.getPassword());
 
@@ -38,14 +37,14 @@ public class AuthenticationService implements IAuthenticationService {
                 throw new UserNotFoundException();
             }
 
-        if (foundPass == null) {
-            throw new NotCorrectPasswordException();
-        }
+             if (foundPass == null || !foundUser.getPassword().equals(foundPass.getPassword())) {
+                 throw new NotCorrectPasswordException();
+             }
 
 
-        // Устанавливаем найденного пользователя, который прошел все проверки, как вошедшего в систему.
-        CurrentUserManager.setCurrentLoggedInUser(foundUser);
-        return foundUser;
+             // Устанавливаем найденного пользователя, который прошел все проверки, как вошедшего в систему.
+             CurrentUserManager.setCurrentLoggedInUser(foundUser);
+             return foundUser;
 
     }
 

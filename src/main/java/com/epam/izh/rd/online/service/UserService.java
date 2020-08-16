@@ -1,8 +1,13 @@
 package com.epam.izh.rd.online.service;
 
 import com.epam.izh.rd.online.entity.User;
+import com.epam.izh.rd.online.exception.NotAccessException;
+import com.epam.izh.rd.online.exception.SimplePasswordException;
+import com.epam.izh.rd.online.exception.UserAlreadyRegisteredException;
 import com.epam.izh.rd.online.repository.IUserRepository;
 import com.epam.izh.rd.online.repository.UserRepository;
+
+import java.util.stream.Collectors;
 
 public class UserService implements IUserService {
 
@@ -30,49 +35,30 @@ public class UserService implements IUserService {
      * @param user - даныне регистрирующегося пользователя
      */
 
-    // (^_^)
-    class UserAlreadyRegisteredException extends Throwable {
-    }
 
-    // (^_^)
-    class SimplePasswordException extends NumberFormatException {
-    }
 
     @Override
-    public User register(User user) {
+    public User register(User user) throws Exception {
 
          // проверяем заполняемость полей
-        try {
+
             if (user.getPassword().trim().length() == 0 || user.getLogin().trim().length() == 0) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Ошибка в заполнении полей");
             }
-        }
-        catch (IllegalArgumentException e) {
-            System.out.println("Ошибка в заполнении полей");
-        }
 
         // проверяем есть ли в базе юзер с таким же логином
-        User foundUser = userRepository.findByLogin(user.getLogin());
+            User foundUser = userRepository.findByLogin(user.getLogin());
 
-        try {
+
             if (foundUser != null) {
-                throw new UserAlreadyRegisteredException();
+                throw new UserAlreadyRegisteredException(foundUser);
             }
 
-        }
-        catch (UserAlreadyRegisteredException e) {
-            System.out.println("Пользователь с логином " + user.getLogin() + " уже зарегистрирован");
-        }
-
         // проверяем сложность пароля
-try {
-  Integer.parseInt(user.getPassword());
 
-}
-catch (SimplePasswordException e) {
-    System.out.println("Пароль не соответствует требованиям безопасности");
-}
-
+        if (user.getPassword().trim().chars().filter(y -> y < 48 || y > 57).mapToObj(String::valueOf).collect(Collectors.toList()).size() < 1) {
+            throw new SimplePasswordException();
+        }
 
         // Если все проверки успешно пройдены, сохраняем пользователя в базу
         return userRepository.save(user);
@@ -99,9 +85,13 @@ catch (SimplePasswordException e) {
     public void delete(String login) {
 
         // Здесь необходимо сделать доработку метод
+try {
 
-            userRepository.deleteByLogin(login);
+    userRepository.deleteByLogin(login);
+}
+catch(NotAccessException e) {
 
+}
         // Здесь необходимо сделать доработку метода
 
     }
